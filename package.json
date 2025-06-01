@@ -2,10 +2,12 @@
   "name": "ai-light",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node .",
+    "build": "npx tsc -p .",
+    "test": "npm run build && node ."
   },
   "keywords": [],
   "author": "",
@@ -13,5 +15,9 @@
   "dependencies": {
     "@tuya/tuya-connector-nodejs": "^2.1.2",
     "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "typescript": "^5.8.3"
   }
 }
