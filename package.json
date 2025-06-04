@@ -13,8 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@t3-oss/env-core": "^0.13.6",
     "@tuya/tuya-connector-nodejs": "^2.1.2",
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "zod": "^3.25.51"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",

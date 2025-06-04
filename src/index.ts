@@ -1,3 +1,3 @@
-import { deviceDetail } from './service.js';
+import { controlBulb } from './service.js';
 
-deviceDetail();
+controlBulb();

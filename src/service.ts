@@ -1,38 +1,39 @@
-import { TuyaContext } from '@tuya/tuya-connector-nodejs';
+import { TuyaContext, TuyaResponse } from '@tuya/tuya-connector-nodejs';
 import 'dotenv/config';
+import { env } from './env.js';
 
-const device_id = process.env.DEVICE_ID as string;
-const baseUrl = process.env.BASE_URL as string;
-const accessKey = process.env.ACCESS_KEY as string;
-const secretKey = process.env.SECRET_KEY as string;
+const device_id = env.DEVICE_ID;
+const baseUrl = env.BASE_URL;
+const accessKey = env.ACCESS_KEY;
+const secretKey = env.SECRET_KEY;
 
 const tuya = new TuyaContext({ baseUrl, accessKey, secretKey });
 
-export async function deviceDetail() {
+export async function controlBulb() {
   try {
     const statusResp = await tuya.deviceStatus.status({ device_id });
     if (!statusResp.success) return console.log('Something Went Wrong, Status wrong');
 
-    const resultArr = Array.isArray(statusResp.result) ? statusResp.result : [];
-
-    const switchLedObj = resultArr.find(({ code }: { code?: string }) => code === 'switch_led');
-    if (!switchLedObj || typeof switchLedObj.value !== 'boolean') {
-      console.log('switch_led status not found or value is not boolean');
-      return;
-    }
-    const switchLedValue: boolean = switchLedObj.value;
+    const switchLedObj = statusResp.result.find(
+      ({ code }: { code?: string }) => code === 'switch_led'
+    );
 
     const device = await tuya.request({
       method: 'POST',
-      path: `/v2.0/cloud/thing/${device_id}/shadow/properties/issue`,
+      path: `/v1.0/iot-03/devices/${device_id}/commands`,
       body: {
-        properties: {
-          switch_led: !switchLedValue
-        }
+        commands: [
+          {
+            code: 'switch_led',
+            value: !switchLedObj?.value
+          }
+        ]
       }
     });
     console.log(
-      `${device.success ? `Light ${switchLedValue ? 'Off' : 'On'}` : 'Something Went Wrong!!!'}`
+      `${
+        device.success ? `Light ${switchLedObj?.value ? 'Off' : 'On'}` : 'Something Went Wrong!!!'
+      }`
     );
   } catch (error) {
     console.log('👎👎👎👎👎 Error 👎👎👎👎👎', error);
