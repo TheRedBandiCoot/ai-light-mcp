@@ -2,7 +2,7 @@
   "name": "ai-light",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index",
+  "main": "dist/src/index",
   "type": "module",
   "scripts": {
     "start": "node .",
@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
     "@t3-oss/env-core": "^0.13.6",
     "@tuya/tuya-connector-nodejs": "^2.1.2",
     "dotenv": "^16.5.0",
