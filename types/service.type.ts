@@ -17,6 +17,7 @@ export type ControlDataCommandValueType = {
 } & ColorDataCommandValueType;
 type SwitchLEDCommandType = {
   code: 'switch_led';
+  /**Value true: switches on the light | Value false: switches off the light.*/
   value: Boolean;
 };
 type BrightValueCommandType = {

@@ -22,7 +22,7 @@ export async function controlBulb() {
       ({ code }: { code?: string }) => code === 'switch_led'
     );
 
-    const device = await tuya.request({
+    /*const device =*/ await tuya.request({
       method: 'POST',
       path: `/v1.0/iot-03/devices/${device_id}/commands`,
       body: {
@@ -34,11 +34,7 @@ export async function controlBulb() {
         ]
       }
     });
-    console.log(
-      `${
-        device.success ? `Light ${switchLedObj?.value ? 'Off' : 'On'}` : 'Something Went Wrong!!!'
-      }`
-    );
+    // console.log(`${device.success ? `Light ${switchLedObj?.value ? 'Off' : 'On'}` : 'Something Went Wrong!!!'}`);
   } catch (error) {
     console.log('👎👎👎👎👎 Error 👎👎👎👎👎', error);
     process.exit(1);
@@ -50,19 +46,19 @@ export async function controlBulb() {
  */
 export async function LightOnOrOff(on: boolean = true) {
   try {
-    const device = await tuya.request({
+    /*const device =*/ await tuya.request({
       method: 'POST',
       path: `/v1.0/iot-03/devices/${device_id}/commands`,
       body: {
         commands: [
           {
-            code: 'switch_led', // power switch of the light
-            value: on // Value true: switches on the light | Value false: switches off the light.
+            code: 'switch_led',
+            value: on
           }
         ]
-      }
+      } as ChangeColorRequestType
     });
-    console.log(`${device.success ? `Light ${on ? 'On' : 'Off'}` : 'Something Went Wrong!!!'}`);
+    // console.log(`${device.success ? `Light ${on ? 'On' : 'Off'}` : 'Something Went Wrong!!!'}`);
   } catch (error) {
     console.log('👎👎👎👎👎 Error 👎👎👎👎👎', error);
     process.exit(1);
@@ -84,7 +80,7 @@ export async function changeColor({
   bright
 }: Omit<ControlDataCommandValueType, 'change_mode'>) {
   try {
-    const device = await tuya.request<ChangeColorRequestType>({
+    /*const device =*/ await tuya.request<ChangeColorRequestType>({
       method: 'POST',
       path: `/v1.0/iot-03/devices/${device_id}/commands`,
       body: {
@@ -97,7 +93,7 @@ export async function changeColor({
         ]
       } as ChangeColorRequestType
     });
-    console.log(`${device.success ? `Light Color Change` : 'Something Went Wrong!!!'}`);
+    // console.log(`${device.success ? `Light Color Change` : 'Something Went Wrong!!!'}`);
   } catch (error) {
     console.log('👎👎👎👎👎 Error 👎👎👎👎👎', error);
     process.exit(1);

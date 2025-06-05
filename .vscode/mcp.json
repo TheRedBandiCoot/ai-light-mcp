@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "wipro-bulb-mcp-vscode": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${workspaceFolder}/dist/src/index.js"],
+      "envFile": "${workspaceFolder}/.env"
+    }
+  }
+}
