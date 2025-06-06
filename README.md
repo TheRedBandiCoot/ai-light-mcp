@@ -12,6 +12,7 @@ A local MCP (Model Context Protocol) server for controlling Wipro smart bulbs us
 - [Installation](#-installation)
 - [Setup](#️-setup)
 - [Environment Variables](#-environment-variables)
+- [Final Build & MCP Launch](#-final-build--mcp-launch)
 - [Contributing](#-contributing)
 - [Acknowledgments](#-acknowledgments)
 - [Resource](#-resource)
@@ -22,9 +23,9 @@ A local MCP (Model Context Protocol) server for controlling Wipro smart bulbs us
 ## ✨ Features
 
 - 🧠 Integrates with VsCode or Claude desktop via MCP
-- 💡 Control Wipro smart bulbs over `Tuya API`
-- ⚙️ Easily configurable through `.env` and MCP config files
-- 🔌 Local-only and secure — no cloud required
+- 💡 Control Wipro smart bulbs via the `Tuya Cloud API`
+- ⚙️ Easily configurable using `.env` and MCP config files
+- 🔌 Runs locally — no cloud dependency for execution
 - 🛠️ Modular and extendable for other IoT devices
 
 ---
@@ -79,102 +80,112 @@ npm install
 
 #### 1. Create `.env` file in your root directory
 
+- In the project root, create a .env file and populate it with the required variables (see [Environment Variables](#-environment-variables)).
+
 #### 2. Setup `Tuya` Cloud service for control the bulb
 
-- Head Over [Tuya Website](https://www.tuya.com/) &rightarrow; <b>Developer Platform</b> (<i>Use `Ctrl + F` for search for <u>Developer Platform</u></i>).
-- Sign Up / LogIn with existing account.
-- After Successfully Login Head over to [Cloud Project](https://platform.tuya.com/cloud/).
-- `Create Cloud Project` for create a new cloud project.
-  - `Project Name` - Enter your project name `e.g. ai-mcp-bulb`
-  - `Description` - Project description `Optional`
-  - `Industry` - `Smart Home`
-  - `Development Method` - `Custom`
-  - `Data Center` - `India Data Center`
-    - _Tuya deploys six data centers globally and provides reliable IoT cloud services for customers worldwide. You can select one or more data centers where your services are deployed. This setting can be changed later._
-  - `Configuration Wizard` - select **4 API Service(s)** | \*_Remove rest_
-    - `IoT Core` `Smart Home Basic Service` `Device Status Notification` `Industry Basic Service` (If you didn't find it try to search `Ctrl + F`).
-    - After selecting `Authorize`
-      - **Remember** if you `skip` it don't worry you can add it later
-        - `Service API` &rightarrow; `Go Authorize`
-  - After you redirect to the **Main Dashboard** of your project **_first thing first_** change the `Guide Mode` from `Industry` to `Smart Home` (If you didn't find it try to search `Ctrl + F`)
-  - Now head over to `Devices`. Under `All Devices` as you can see no device right now available because we haven't setup yet.
-    - Go to `Link App Account`. select `Add App Account` for adding your **_Smart Life App_** to authorize. Now [setup your Smart Life App](#3-setup-smart-life-app-in-your-phone) in your phone and follow next step from here.
-  - A `⛶ QR Code` popup for scan it using **_Smart Life App_**.
-  - After permission confirmation from phone in **_dashboard_** `Device Linking Method` &rightarrow; `Automatic Link (Recommended)`.
-  - Now Head over to `All Devices` - (Now you can see `Device Name` `Device ID` `Device Permission` `Operation`)
+1. Visit the [Tuya IoT Developer Platform](https://www.tuya.com/) → Search for **Developer Platform**
+2. Log in or sign up, then go to the [Cloud Project Console](https://platform.tuya.com/cloud/).
+3. Click `Create Cloud Project` and fill in:
+   - **Name**: e.g., `ai-mcp-bulb`
+   - **Industry**: `Smart Home`
+   - **Development Method**: `Custom`
+   - **Data Center**: `India Data Center` (or one closest to you)
+   - Select these API services:
+     - `IoT Core`
+     - `Smart Home Basic Service`
+     - `Device Status Notification`
+     - `Industry Basic Service`
+4. Click **Authorize** (can be done later from `Service API` > `Go Authorize`)
+5. Once inside the dashboard, change `Guide Mode` to **Smart Home**
+6. `Go to Devices` > `Link App Account` > `Add App Account`
+7. Scan the **_QR code_** using the **Smart Life app** (see next step)
 
-#### 3. Setup `Smart Life App` in your phone📱
+#### 3. Smart Life App Setup
 
-- Sign Up / LogIn with existing account.
-- Now pair your smart bulb and add this device. (click `+` &rightarrow; `Add Device` - app search for your bulb - **_make sure you turn on/off the bulb simultaneously for 7-8 times for reset/pair mode on_**)
-- After the light setup head over to `profile🙎🏻‍♂️` open `⛶ QR Scanner`
-- Scan the `⛶ QR provide` from `Add App Account` QR.
-- After scan `Confirm` it from phone for granted permission.
+1. Download and open the Smart Life app
+2. Log in or register
+3. Add your Wipro bulb by tapping `+` > `Add Device`
+   - Make sure the bulb is in pairing mode (turn it off/on 7–8 times rapidly)
+4. After pairing, go to the app profile, open the QR scanner, and scan the code shown in the Tuya dashboard
+5. Approve the linking request
 
-#### 4. Control the Smart Light from Tuya Dashboard
+#### 4. Control Device from Tuya Dashboard
 
-- In your Dashboard Head over to `Devices` &rightarrow; `All Devices` &rightarrow; `Device Permission` (Search It `Ctrl + F` if you don't find it)
-  - Change `Device Permission` from `Read` To `Controllable` - Refresh the page to see the changes.
-- Now go to `Operation` &rightarrow; `Debug Device`
-  - Here under `Basic Information` &rightarrow; `Extension Information` &rightarrow; `IP Address`
-    - Note down the `IP Address` for **\*Allow Cloud Authorization IP** (_We do it later_)
-  - ##### <span style="color:lightgreen">ENV 1</span> - **_`Device ID`_**
-    - `Basic Information` &rightarrow; `Device Information` &rightarrow; `Devise ID`
-  - For control the light go to `Device Debugging`
-     <details>
-      <summary>
-        Here is the video demonstration How it work
-      </summary>
-      
-     ![Demo](assets/demo-gif.gif)
-    </details>
+1. Go to `Devices` > `All Devices`
+2. Under `Device Permission`, change from `Read` to `Controllable`
+3. Click `Debug Device` → Note the `IP Address` from `Extension Information`
+   > You'll need this IP to allow cloud access in the next step.
+4. Copy the `Device ID` from `Basic Information`
+   > This is your **ENV 1** value.
+5. Use the **Device Debugging** tab to test controlling the bulb.
+   <details> 
+      <summary>📽️ Click to view demo</summary>
+
+   ![Demo](assets/demo-gif.gif)
+
+      </details>
 
 #### 5. Allow Cloud Authorization IP
 
-- In your project _Dashboard_ under `Overview` - _Toggle_ `Cloud Authorization IP Allowlist`
-  - `configure IP whitelist` - Add your device IP. (Previously Mention From where IP Address Locate - Head Over to [Control the Smart Light from Tuya Dashboard](#4-control-the-smart-light-from-tuya-dashboard)) section
+In your project’s `Overview` section:
 
-#### 6. Authorization Key
+- Toggle **Cloud Authorization IP Allowlist**
+- Add your device's IP address (found in the Debug section)
 
-- In your _Project Dashboard_ &rightarrow; _Overview_ &rightarrow; `Authorization Key`
-  - ##### <span style="color:lightgreen">ENV 2 & 3</span> - **_`Access ID/Client ID`_** **_`Access Secret/Client Secret`_**
+#### 6. Authorization Keys
+
+In `Overview` → `Authorization Key`:
+
+- Copy your **Access ID / Client ID** → (**ENV 2**)
+- Copy your **Access Secret / Client Secret** → (**ENV 3**)
 
 ---
 
 ## 🌿 Environment Variables
 
-| Sl.   | Name                        | locate                                                                                                                  |
-| ----- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| ENV 1 | Device ID                   | `Project Dashboard` &rightarrow; `Devices` &rightarrow; `All Devices` &rightarrow; `Device ID`                          |
-| ENV 2 | Access ID/Client ID         | `Project Dashboard` &rightarrow; `Overview` &rightarrow; `Authorization Key` &rightarrow; `Access ID/Client ID`         |
-| ENV 3 | Access Secret/Client Secret | `Project Dashboard` &rightarrow; `Overview` &rightarrow; `Authorization Key` &rightarrow; `Access Secret/Client Secret` |
-| EVN 4 | BASE_URL                    | [`🔗https://openapi.tuyain.com🔗`](https://github.com/tuya/tuya-connector-Nodejs)                                       |
+Create a `.env` file in your root directory with the following:
+| Name | Description |
+| -| - |
+| Device ID | Your Wipro bulb's Device ID (from **Tuya device details**)|
+| Access ID/Client ID | Tuya project's Access ID |
+| Access Secret/Client Secret | Tuya project's Access Secret |
+| BASE_URL | Tuya API base URL — `https://openapi.tuyain.com` |
 
 ---
 
-## 5. Final Setup (Build & MCP Setup)
+## 🔧 Final Build & MCP Launch
 
-- After Env setup Now its time for build
-  ```bash
-  $ npm run build
-  ```
+Once all setup is complete:
+
+```bash
+$ npm run build
+```
+
+Start the server via VS Code MCP:
+
 - Go to `.vscode/mcp.json` and `start` the server.
 
 ```bash
+# Example output:
 [server stderr] Wipro Smart Bulb MCP Server Is Running
 [info] Discovered 3 tools
 ```
 
-#### Now Head over to coplot and ask copilot agent to do task like
+Now use Copilot/Claude Desktop and ask:
 
-- `Turn On Light` `Light color change to blue` `Light off`
-- make sure to allow permission for tools to get work done
+- `Turn on the light`
+- `Set color to blue`
+- `Turn off the light`
+
+✅ Make sure to **grant tool permissions** when prompted.
 
 ---
 
 ## 🤝 Contributing
 
-- Pull requests are welcome! For major changes, open an issue first to discuss what you'd like to change.
+Pull requests are welcome!
+For significant changes, please open an issue to discuss your ideas first.
 
 ---
 
@@ -186,13 +197,14 @@ npm install
 
 ## 📚 Resource
 
-- [Tuya Developer Platform](https://developer.tuya.com/en/docs/iot) &rightarrow; [Cloud Development](https://developer.tuya.com/en/docs/iot/introduction-to-tuya-iot-platform?id=Ka6vijvqb3uhn) &rightarrow; [Standard Instruction Set](https://developer.tuya.com/en/docs/iot/standarddescription?id=K9i5ql6waswzq) &rightarrow; [Lighting](https://developer.tuya.com/en/docs/iot/lighting?id=Kaiuyzxq30wmc) &rightarrow; [Light (dj)](https://developer.tuya.com/en/docs/iot/categorydj?id=Kaiuyzy3eheyy) &rightarrow; [Instruction Set: dj](https://developer.tuya.com/en/docs/iot/dj?id=K9i5ql3v98hn3)
-- [Tuya Developer Platform](https://developer.tuya.com/en/docs/iot) &rightarrow; [SDK Reference](https://developer.tuya.com/en/docs/iot/sdk-reference?id=Kbd2uhl6cbha1)
-  - [`🔗Node.js SDK for Cloud Development Github Repo🔗`](https://github.com/tuya/tuya-connector-Nodejs)
+- [Tuya Developer Docs](https://developer.tuya.com/en/docs/iot)
+- [Cloud Development Guide](https://developer.tuya.com/en/docs/iot/introduction-to-tuya-iot-platform?id=Ka6vijvqb3uhn)
+- [Node.js SDK GitHub Repo](https://github.com/tuya/tuya-connector-Nodejs)
+- [Standard Instruction Set](https://developer.tuya.com/en/docs/iot/standarddescription?id=K9i5ql6waswzq)
+- [Lighting → dj Category](https://developer.tuya.com/en/docs/iot/categorydj?id=Kaiuyzy3eheyy)
 
 ---
 
 ## 📝 License
 
-- Copyright (c) Microsoft Corporation. All rights reserved.
-- Licensed under the [MIT](LICENSE.txt) license.
+© Microsoft Corporation. Licensed under the [MIT License](LICENSE.txt) .
