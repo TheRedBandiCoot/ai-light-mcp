@@ -18,6 +18,7 @@ export async function controlBulb() {
     if (!statusResp.success) return console.log('Something Went Wrong, Status wrong');
 
     /**TS Error Fix : node_modules\@tuya\tuya-connector-nodejs\lib\service\device\status.d.ts -> type DeviceStatusServiceStatusResult ->  status(param: DeviceStatusServiceStatusParam): Promise<TuyaResponse<DeviceStatusServiceStatusResult[]>>*/
+    //@ts-ignore
     const switchLedObj = statusResp.result.find(
       ({ code }: { code?: string }) => code === 'switch_led'
     );
